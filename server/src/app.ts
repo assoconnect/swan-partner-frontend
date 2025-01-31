@@ -7,12 +7,11 @@ import sensible, { HttpErrorCodes } from "@fastify/sensible";
 import fastifyStatic from "@fastify/static";
 import fastifyView from "@fastify/view";
 import { Array, Future, Option, Result } from "@swan-io/boxed";
-import fastify, { FastifyReply } from "fastify";
+import fastify from "fastify";
 import mustache from "mustache";
 import { randomUUID } from "node:crypto";
 import { lookup } from "node:dns";
 import fs from "node:fs";
-import { Http2SecureServer } from "node:http2";
 import path from "pathe";
 import { P, match } from "ts-pattern";
 import {
@@ -40,10 +39,11 @@ import { HttpsConfig, startDevServer } from "./client/devServer";
 import { getProductionRequestHandler } from "./client/prodServer";
 import { env } from "./env";
 import { replyWithAuthError, replyWithError } from "./error";
+import { FastifySecureReply } from "./types";
 
 const packageJson = JSON.parse(
   fs.readFileSync(path.join(__dirname, "../package.json"), "utf-8"),
-) as unknown as { version: string };
+) as { version: string };
 
 const COOKIE_MAX_AGE = 60 * (env.NODE_ENV !== "test" ? 5 : 60); // 5 minutes (except for tests)
 const OAUTH_STATE_COOKIE_MAX_AGE = 900; // 15 minutes
@@ -63,7 +63,6 @@ type AppConfig = {
 };
 
 declare module "@fastify/secure-session" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface SessionData {
     expiresAt: number;
     accessToken: string;
@@ -73,7 +72,6 @@ declare module "@fastify/secure-session" {
 }
 
 declare module "fastify" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface FastifyRequest {
     accessToken: string | undefined;
     config: {
@@ -250,7 +248,7 @@ export const start = async ({
       const refreshToken = request.session.get("refreshToken");
       const expiresAt = request.session.get("expiresAt") ?? 0;
 
-      if (typeof refreshToken == "string" && expiresAt < Date.now() + TEN_SECONDS) {
+      if (typeof refreshToken === "string" && expiresAt < Date.now() + TEN_SECONDS) {
         refreshAccessToken({
           refreshToken,
           redirectUri: `${env.BANKING_URL}/auth/callback`,
@@ -299,14 +297,14 @@ export const start = async ({
     }
   });
 
-  app.addHook("onRequest", (request, reply, done) => {
+  app.addHook("onRequest", (request, _reply, done) => {
     request.accessToken = request.session.get("accessToken");
     done();
   });
 
   app.addHook("onRequest", (request, reply, done) => {
     if (request.url.startsWith("/api/") || request.url.startsWith("/auth/")) {
-      void reply.header("cache-control", `private, max-age=0`);
+      void reply.header("cache-control", "private, max-age=0");
     }
     done();
   });
@@ -331,8 +329,8 @@ export const start = async ({
   /**
    * An no-op to extend the cookie duration.
    */
-  app.post("/api/ping", async (request, reply) => {
-    return reply.header("cache-control", `private, max-age=0`).status(200).send({
+  app.post("/api/ping", async (_request, reply) => {
+    return reply.header("cache-control", "private, max-age=0").status(200).send({
       ok: true,
     });
   });
@@ -340,7 +338,7 @@ export const start = async ({
   /**
    * Proxies the Swan "unauthenticated" GraphQL API.
    */
-  app.post("/api/unauthenticated", async (request, reply) => {
+  app.post("/api/unauthenticated", async (_request, reply) => {
     return reply.from(env.UNAUTHENTICATED_API_URL);
   });
 
@@ -351,7 +349,7 @@ export const start = async ({
     return reply.from(env.PARTNER_API_URL, {
       rewriteRequestHeaders: (_req, headers) => ({
         ...headers,
-        ...(request.accessToken != undefined
+        ...(request.accessToken != null
           ? { Authorization: `Bearer ${request.accessToken}` }
           : undefined),
       }),
@@ -365,7 +363,7 @@ export const start = async ({
     return reply.from(env.PARTNER_ADMIN_API_URL, {
       rewriteRequestHeaders: (_req, headers) => ({
         ...headers,
-        ...(request.accessToken != undefined
+        ...(request.accessToken != null
           ? { Authorization: `Bearer ${request.accessToken}` }
           : undefined),
       }),
@@ -388,7 +386,7 @@ export const start = async ({
         )
         .tapOk(onboardingId => {
           return reply
-            .header("cache-control", `private, max-age=0`)
+            .header("cache-control", "private, max-age=0")
             .redirect(`${env.ONBOARDING_URL}/onboardings/${onboardingId}`);
         })
         .tapError(error => {
@@ -425,7 +423,7 @@ export const start = async ({
         )
         .tapOk(onboardingId => {
           return reply
-            .header("cache-control", `private, max-age=0`)
+            .header("cache-control", "private, max-age=0")
             .redirect(`${env.ONBOARDING_URL}/onboardings/${onboardingId}`);
         })
         .tapError(error => {
@@ -563,7 +561,7 @@ export const start = async ({
 
     return reply.redirect(
       createAuthUrl({
-        scope: scope.split(" ").filter(item => item != null && item != ""),
+        scope: scope.split(" ").filter(item => item != null && item !== ""),
         params: {
           ...(email != null ? { email } : null),
           ...(onboardingId != null ? { onboardingId } : null),
@@ -581,7 +579,7 @@ export const start = async ({
    * OAuth2 Redirection handler
    */
   app.get<{ Querystring: Record<string, string> }>("/auth/callback", async (request, reply) => {
-    type Reply = FastifyReply<Http2SecureServer> | Promise<FastifyReply<Http2SecureServer>>;
+    type Reply = FastifySecureReply | Promise<FastifySecureReply>;
 
     const state = Result.fromExecution<unknown>(() =>
       JSON.parse(request.query.state ?? "{}"),
@@ -641,7 +639,7 @@ export const start = async ({
                           Ok: ({ redirectUrl, state, accountMembershipId, oAuthClientId }) => {
                             const queryString = new URLSearchParams();
 
-                            if (redirectUrl != undefined) {
+                            if (redirectUrl != null) {
                               const redirectHost = new URL(redirectUrl).hostname;
 
                               // When onboarding from the dashboard, we don't yet have a OAuth2 client,
@@ -661,7 +659,7 @@ export const start = async ({
                               }
                             }
 
-                            if (accountMembershipId != undefined) {
+                            if (accountMembershipId != null) {
                               queryString.append("accountMembershipId", accountMembershipId);
                             }
 
@@ -691,7 +689,7 @@ export const start = async ({
                           Ok: ({ redirectUrl, state, accountMembershipId }) => {
                             const queryString = new URLSearchParams();
 
-                            if (redirectUrl != undefined) {
+                            if (redirectUrl != null) {
                               const authUri = createAuthUrl({
                                 scope: [],
                                 redirectUri: redirectUrl,
@@ -702,7 +700,7 @@ export const start = async ({
                               queryString.append("redirectUrl", authUri);
                             }
 
-                            if (accountMembershipId != undefined) {
+                            if (accountMembershipId != null) {
                               queryString.append("accountMembershipId", accountMembershipId);
                             }
 
@@ -826,7 +824,7 @@ export const start = async ({
    * Exposes environement variables to the client apps at runtime.
    * The client simply has to load `<script src="/env.js"></script>`
    */
-  app.get("/env.js", async (request, reply) => {
+  app.get("/env.js", async (_request, reply) => {
     const projectId = await getProjectId();
     const data = {
       VERSION: packageJson.version,
@@ -856,12 +854,12 @@ export const start = async ({
 
     return reply
       .header("Content-Type", "application/javascript")
-      .header("cache-control", `public, max-age=0`)
+      .header("cache-control", "public, max-age=0")
       .send(`window.__env = ${JSON.stringify(data)};`);
   });
 
-  app.get("/health", async (request, reply) => {
-    return reply.header("cache-control", `private, max-age=0`).status(200).send({
+  app.get("/health", async (_request, reply) => {
+    return reply.header("cache-control", "private, max-age=0").status(200).send({
       version: packageJson.version,
       date: new Date().toISOString(),
       env: env.NODE_ENV,

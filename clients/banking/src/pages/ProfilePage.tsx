@@ -193,7 +193,8 @@ export const ProfilePage = ({ additionalInfo, email, accentColor }: Props) => {
               <Space height={16} />
 
               <TileRows breakpoint={700}>
-                <Tile>
+                {/* // Keep comment for Assoconnect users */}
+                {/* <Tile>
                   <LakeHeading variant="h5" level={3}>
                     {t("profile.chat")}
                   </LakeHeading>
@@ -221,7 +222,7 @@ export const ProfilePage = ({ additionalInfo, email, accentColor }: Props) => {
                       )}
                     </SupportChat>
                   </LakeButtonGroup>
-                </Tile>
+                </Tile> */}
 
                 <Tile>
                   <LakeHeading variant="h5" level={3}>

@@ -342,14 +342,15 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           {() =>
             showButtons && getFieldValue("country") === "FRA" ? (
               <LakeButton
-                mode="secondary"
+                mode="primary"
+                color="current"
                 onPress={() => {
                   setIsModalVisible(true);
                   searchAddress();
                 }}
                 grow={true}
               >
-                {t("common.search")}
+                {t("common.search.address")}
               </LakeButton>
             ) : null
           }

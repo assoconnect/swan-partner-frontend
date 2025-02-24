@@ -49,7 +49,7 @@ type Props = {
   accentColor: string;
 };
 
-export const ProfilePage = ({ additionalInfo, email, accentColor }: Props) => {
+export const ProfilePage = ({ email }: Props) => {
   const [data] = useQuery(ProfilePageDocument, {});
 
   const languageOptions = useMemo(

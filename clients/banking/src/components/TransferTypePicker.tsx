@@ -86,7 +86,8 @@ export const TransferTypePicker = ({
             },
           ]
         : []),
-      ...(permissions.canInitiateCreditTransfer && ictEnabled.getOr(false)
+        // Keep international transfer enabled for Assoconnect users
+      ...(permissions.canInitiateCreditTransfer && ictEnabled.getOr(true)
         ? [
             {
               url: Router.AccountPaymentsNew({ accountMembershipId, type: "international" }),

@@ -63,7 +63,15 @@ const CardWizardIndividualDeliveryWithAddress = forwardRef<
       members.map(member => ({ member, address, choosePin: false })),
     );
 
-  const [editingAddress, setEditingAddress] = useState<[Address, number] | null>(null);
+  const [editingAddress, setEditingAddress] = useState<[Address, number] | null>([{
+    addressLine1: currentCardIndividualDeliveryConfig[0]?.address.addressLine1 ?? '',
+    addressLine2: currentCardIndividualDeliveryConfig[0]?.address.addressLine2 ?? '',
+    postalCode: currentCardIndividualDeliveryConfig[0]?.address.postalCode ?? '',
+    city: currentCardIndividualDeliveryConfig[0]?.address.city ?? '',
+    state: currentCardIndividualDeliveryConfig[0]?.address.state ?? '',
+    country: currentCardIndividualDeliveryConfig[0]?.address.country as CountryCCA3 ?? 'FRA',
+  }, 0]);
+
 
   const hasSomeError = currentCardIndividualDeliveryConfig.some(config =>
     validateAddress(config.address),

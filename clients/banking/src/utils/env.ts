@@ -6,4 +6,8 @@ export const env = {
   APP_TYPE: __env.SWAN_ENVIRONMENT,
   PLACEKIT_API_KEY: __env.CLIENT_PLACEKIT_API_KEY,
   TGGL_API_KEY: __env.TGGL_API_KEY,
+
+  // Assoconnect Feature flags
+  DISPLAY_FEATURE_ICT: __env.DISPLAY_FEATURE_ICT,
+  DISPLAY_FEATURE_CHAT: __env.DISPLAY_FEATURE_CHAT,
 };

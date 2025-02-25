@@ -27,6 +27,7 @@ import { ErrorView } from "../components/ErrorView";
 import { ProfilePageDocument } from "../graphql/partner";
 import { languages, locale, setPreferredLanguage, t } from "../utils/i18n";
 import { NotFoundPage } from "./NotFoundPage";
+import { env } from "../utils/env";
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +50,7 @@ type Props = {
   accentColor: string;
 };
 
-export const ProfilePage = ({ email }: Props) => {
+export const ProfilePage = ({ additionalInfo, email, accentColor }: Props) => {
   const [data] = useQuery(ProfilePageDocument, {});
 
   const languageOptions = useMemo(
@@ -193,8 +194,9 @@ export const ProfilePage = ({ email }: Props) => {
               <Space height={16} />
 
               <TileRows breakpoint={700}>
-                {/* // Keep comment for Assoconnect users */}
-                {/* <Tile>
+               {env.DISPLAY_FEATURE_CHAT &&
+               
+               <Tile>
                   <LakeHeading variant="h5" level={3}>
                     {t("profile.chat")}
                   </LakeHeading>
@@ -222,7 +224,9 @@ export const ProfilePage = ({ email }: Props) => {
                       )}
                     </SupportChat>
                   </LakeButtonGroup>
-                </Tile> */}
+                </Tile>
+               
+               } 
 
                 <Tile>
                   <LakeHeading variant="h5" level={3}>

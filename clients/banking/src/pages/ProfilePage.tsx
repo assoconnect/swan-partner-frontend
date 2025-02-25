@@ -194,7 +194,7 @@ export const ProfilePage = ({ additionalInfo, email, accentColor }: Props) => {
               <Space height={16} />
 
               <TileRows breakpoint={700}>
-               {env.DISPLAY_FEATURE_CHAT &&
+               {env.ASC_DISPLAY_FEATURE_CHAT &&
                
                <Tile>
                   <LakeHeading variant="h5" level={3}>

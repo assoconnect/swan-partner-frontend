@@ -831,8 +831,8 @@ export const start = async ({
         Ok: () => false,
         Error: () => true,
       }),
-      DISPLAY_FEATURE_ICT: process.env.DISPLAY_FEATURE_ICT === "true",
-      DISPLAY_FEATURE_CHAT: process.env.DISPLAY_FEATURE_CHAT === "true",
+      ASC_DISPLAY_FEATURE_ICT: process.env.ASC_DISPLAY_FEATURE_ICT === "true",
+      ASC_DISPLAY_FEATURE_CHAT: process.env.ASC_DISPLAY_FEATURE_CHAT === "true",
       ...Object.fromEntries(
         Array.filterMap(Object.entries(process.env), ([key, value]) =>
           key.startsWith("CLIENT_") ? Option.Some([key, value]) : Option.None(),

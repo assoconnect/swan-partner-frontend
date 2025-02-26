@@ -133,7 +133,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           const filteredAddresses: { adresse: string; code: string; }[] = response.data.result.slice(0, 5);
           setSuggestedAddresses(filteredAddresses);
           if(filteredAddresses.length > 0 && filteredAddresses[0]?.code !== undefined) {
-            setFieldValue("selectedAddress", filteredAddresses[0]?.code);
+            handleSelectAddress(filteredAddresses[0]?.code);
           }
         } else {
           console.error("Unexpected response structure:", response.data);

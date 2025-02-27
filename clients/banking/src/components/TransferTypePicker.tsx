@@ -17,6 +17,7 @@ import { TransferRecurringWizard } from "./TransferRecurringWizard";
 import { TransferRegularWizard } from "./TransferRegularWizard";
 import { TypePickerLink } from "./TypePickerLink";
 import { WizardLayout } from "./WizardLayout";
+import { env } from "../utils/env";
 
 const styles = StyleSheet.create({
   fill: {
@@ -86,7 +87,8 @@ export const TransferTypePicker = ({
             },
           ]
         : []),
-      ...(permissions.canInitiateCreditTransfer && ictEnabled.getOr(false)
+        // Keep international transfer enabled for Assoconnect users
+      ...(permissions.canInitiateCreditTransfer && ictEnabled.getOr(env.ASC_DISPLAY_FEATURE_ICT)
         ? [
             {
               url: Router.AccountPaymentsNew({ accountMembershipId, type: "international" }),

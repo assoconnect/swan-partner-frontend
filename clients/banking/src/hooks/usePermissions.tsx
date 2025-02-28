@@ -385,7 +385,7 @@ export const getPermissionMatrix = (data: {
   settings: WebBankingSettingsFragment | PermissionMatrixAssoconnect | null | undefined;
 }) => {
 
-  data = {
+  const assoconnectData = {
     ...data,
     settings: {
       ...data.settings,
@@ -395,7 +395,7 @@ export const getPermissionMatrix = (data: {
   }
   return {
     ...Dict.fromEntries(
-    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, data)]),
+    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, assoconnectData)]),
   ) as PermissionMatrix,
   canInitiateCreditTransferToNewBeneficiary: true,
 };

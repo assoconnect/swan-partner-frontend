@@ -384,13 +384,15 @@ export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | PermissionMatrixAssoconnect | null | undefined;
 }) => {
-
+  console.log(data);
   const assoconnectData = {
     ...data,
     settings: {
       ...data.settings,
       canOrderPhysicalCards: true,
       canOrderVirtualCards: true,
+      canViewAccountDetails: true,
+      
     }
   }
   return {
@@ -398,6 +400,7 @@ export const getPermissionMatrix = (data: {
     Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, assoconnectData)]),
   ) as PermissionMatrix,
   canInitiateCreditTransferToNewBeneficiary: true,
+  canReadTrustedBeneficiary: true
 };
 }
 

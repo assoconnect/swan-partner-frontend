@@ -378,7 +378,6 @@ export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | null | undefined;
 }) => {
-  console.log("data", data);
   return {
     ...Dict.fromEntries(
     Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, data)]),

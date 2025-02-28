@@ -377,10 +377,17 @@ const defaultPermissionsMatrix = Dict.fromEntries(
 export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | null | undefined;
-}) =>
-  Dict.fromEntries(
+}) => {
+  console.log("data", data);
+  return {
+    ...Dict.fromEntries(
     Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, data)]),
-  ) as PermissionMatrix;
+  ) as PermissionMatrix,
+  canOrderPhysicalCards: true,
+  canOrderVirtualCards: true,
+  canInitiateCreditTransferToNewBeneficiary: true,
+};
+}
 
 type Input = Option<{
   accountMembership: AccountMembershipPermissionsFragment;

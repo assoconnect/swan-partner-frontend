@@ -175,7 +175,7 @@ export const validateTime =
     const hours = Number(hoursStr);
     const minutes = Number(minutesStr);
 
-    if (isNaN(hours) || isNaN(minutes)) {
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) {
       return t("common.form.invalidTime");
     }
 
@@ -327,7 +327,7 @@ export const validateNumeric = (params?: { min?: number; max?: number }): Valida
     if (!/^-?\d+$/.test(value) && !/^-?\d+\.\d+$/.test(value)) {
       return t("common.form.number");
     }
-    const parsed = parseFloat(value);
+    const parsed = Number.parseFloat(value);
     if (params?.min != null && parsed < params.min) {
       return t("common.form.number.upperThan", { value: params.min });
     }
@@ -370,8 +370,16 @@ export const validateCMC7 = (value: string) => {
 
 const RLMC_RE = /^\d{2}$/;
 
-export const validateRLMC = (value: string) => {
-  if (!RLMC_RE.test(value)) {
+export const validateRLMC = (cmc7: string) => (rlmc: string) => {
+  if (!RLMC_RE.test(rlmc)) {
+    return t("common.form.invalidRLMC");
+  }
+
+  const remainder = `${cmc7}${rlmc}`
+    .split("")
+    .reduce((remainder, char) => (remainder * 10 + Number.parseInt(char)) % 97, 0);
+
+  if (remainder !== 0) {
     return t("common.form.invalidRLMC");
   }
 };

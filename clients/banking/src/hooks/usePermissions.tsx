@@ -384,7 +384,6 @@ export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | PermissionMatrixAssoconnect | null | undefined;
 }) => {
-  console.log(data);
   const assoconnectData = {
     ...data,
     settings: {
@@ -392,7 +391,7 @@ export const getPermissionMatrix = (data: {
       canOrderPhysicalCards: true,
       canOrderVirtualCards: true,
       canViewAccountDetails: true,
-      
+      canViewPaymentList: true,
     }
   }
   return {

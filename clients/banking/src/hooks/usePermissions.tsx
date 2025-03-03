@@ -5,7 +5,6 @@ import {
   AccountMembershipPermissionsFragment,
   WebBankingSettingsFragment,
 } from "../graphql/partner";
-import { AccountStatementCustom } from "../components/AccountStatementCustom";
 
 const ENABLED_OR_BINDING_USER_ERROR = P.union("BindingUserError", "Enabled");
 const ENABLED = "Enabled";

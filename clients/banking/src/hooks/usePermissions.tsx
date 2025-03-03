@@ -374,13 +374,35 @@ const defaultPermissionsMatrix = Dict.fromEntries(
   Dict.entries(PERMISSIONS_MATRIX).map(([key]) => [key, false]),
 ) as PermissionMatrix;
 
+
+type PermissionMatrixAssoconnect = {
+  canOrderPhysicalCards: boolean;
+  canOrderVirtualCards: boolean;
+};
+
 export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
-  settings: WebBankingSettingsFragment | null | undefined;
-}) =>
-  Dict.fromEntries(
-    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, data)]),
-  ) as PermissionMatrix;
+  settings: WebBankingSettingsFragment | PermissionMatrixAssoconnect | null | undefined;
+}) => {
+  const assoconnectData = {
+    ...data,
+    settings: {
+      ...data.settings,
+      canOrderPhysicalCards: true,
+      canOrderVirtualCards: true,
+      canViewAccountDetails: true,
+      canViewPaymentList: true,
+      canViewAccountStatement: true,
+    }
+  }
+  return {
+    ...Dict.fromEntries(
+    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, assoconnectData)]),
+  ) as PermissionMatrix,
+  canInitiateCreditTransferToNewBeneficiary: true,
+  canReadTrustedBeneficiary: true,
+};
+}
 
 type Input = Option<{
   accountMembership: AccountMembershipPermissionsFragment;

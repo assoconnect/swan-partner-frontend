@@ -5,6 +5,7 @@ import {
   AccountMembershipPermissionsFragment,
   WebBankingSettingsFragment,
 } from "../graphql/partner";
+import { AccountStatementCustom } from "../components/AccountStatementCustom";
 
 const ENABLED_OR_BINDING_USER_ERROR = P.union("BindingUserError", "Enabled");
 const ENABLED = "Enabled";
@@ -392,6 +393,7 @@ export const getPermissionMatrix = (data: {
       canOrderVirtualCards: true,
       canViewAccountDetails: true,
       canViewPaymentList: true,
+      canViewAccountStatement: true,
     }
   }
   return {
@@ -399,7 +401,7 @@ export const getPermissionMatrix = (data: {
     Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, assoconnectData)]),
   ) as PermissionMatrix,
   canInitiateCreditTransferToNewBeneficiary: true,
-  canReadTrustedBeneficiary: true
+  canReadTrustedBeneficiary: true,
 };
 }
 

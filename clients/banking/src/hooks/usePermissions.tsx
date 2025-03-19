@@ -374,12 +374,6 @@ const defaultPermissionsMatrix = Dict.fromEntries(
   Dict.entries(PERMISSIONS_MATRIX).map(([key]) => [key, false]),
 ) as PermissionMatrix;
 
-
-type PermissionMatrixAssoconnect = {
-  canOrderPhysicalCards: boolean;
-  canOrderVirtualCards: boolean;
-};
-
 export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | null | undefined;

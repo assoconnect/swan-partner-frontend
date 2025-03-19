@@ -399,7 +399,7 @@ export const getPermissionMatrix = (data: {
  return {
   ...Dict.fromEntries(
     Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern)(assoconnectData)]),
-  ) as PermissionMatrix;
+  ) as PermissionMatrix,
   canInitiateCreditTransferToNewBeneficiary: true,
   canReadTrustedBeneficiary: true,
 }

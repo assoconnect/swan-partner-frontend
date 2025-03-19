@@ -382,7 +382,7 @@ type PermissionMatrixAssoconnect = {
 
 export const getPermissionMatrix = (data: {
   accountMembership: AccountMembershipPermissionsFragment;
-  settings: WebBankingSettingsFragment | PermissionMatrixAssoconnect | null | undefined;
+  settings: WebBankingSettingsFragment | null | undefined;
 }) => {
   const assoconnectData = {
     ...data,
@@ -395,19 +395,21 @@ export const getPermissionMatrix = (data: {
       canViewAccountStatement: true,
     }
   }
-  return {
-    ...Dict.fromEntries(
-    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern, assoconnectData)]),
-  ) as PermissionMatrix,
+
+ return {
+  ...Dict.fromEntries(
+    Dict.entries(PERMISSIONS_MATRIX).map(([key, pattern]) => [key, isMatching(pattern)(assoconnectData)]),
+  ) as PermissionMatrix;
   canInitiateCreditTransferToNewBeneficiary: true,
   canReadTrustedBeneficiary: true,
-};
+}
 }
 
 type Input = Option<{
   accountMembership: AccountMembershipPermissionsFragment;
   settings: WebBankingSettingsFragment | null | undefined;
 }>;
+
 
 export const PermissionContext = createContext<PermissionMatrix>(defaultPermissionsMatrix);
 

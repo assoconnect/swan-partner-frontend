@@ -97,7 +97,7 @@ export const TransferTypePicker = ({
             },
           ]
         : []),
-      ...(permissions.canInitiateCreditTransferToNewBeneficiary
+      ...(permissions.canInitiateCreditTransferToNewBeneficiary || process.env.ASC_DISPLAY_FEATURE_NEW_BENEFICIARIES === "true"
         ? [
             {
               url: Router.AccountPaymentsNew({ accountMembershipId, type: "bulk" }),

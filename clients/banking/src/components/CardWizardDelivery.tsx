@@ -53,25 +53,6 @@ export const CardWizardDelivery = ({ ref, initialDeliveryMode, onSubmit }: Props
 
   const items: CardDeliveryMode[] = ["Grouped", "Individual"];
 
-  return (
-    <ChoicePicker
-      items={items}
-      renderItem={cardDeliveryMode => {
-        return (
-          <View style={styles.item}>
-            <Box alignItems="center">
-              <Icon
-                color={
-                  currentDeliveryMode === cardDeliveryMode ? colors.swan[300] : colors.swan[200]
-                }
-                size={148}
-                name={match(cardDeliveryMode)
-                  .with("Grouped", () => "lake-delivery-grouped" as const)
-                  .with("Individual", () => "lake-delivery-individual" as const)
-                  .exhaustive()}
-              />
-
-<<<<<<< HEAD
     return (
       <ChoicePicker
         items={items}
@@ -89,9 +70,6 @@ export const CardWizardDelivery = ({ ref, initialDeliveryMode, onSubmit }: Props
                     .with("Individual", () => "lake-delivery-individual" as const)
                     .exhaustive()}
                 />
-=======
-              <Space height={24} />
->>>>>>> upstream/main
 
               <LakeHeading userSelect="none" level={3} variant="h3">
                 {match(cardDeliveryMode)

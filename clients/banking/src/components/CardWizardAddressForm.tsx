@@ -130,21 +130,12 @@ export const CardWizardAddressForm = ({
                   <LakeLabel
                     label={t("cardWizard.address.line1")}
                     render={id => (
-                      <PlacekitAddressSearchInput
-                        apiKey={__env.CLIENT_PLACEKIT_API_KEY}
-                        country={(country.value as CountryCCA3) ?? "FRA"}
-                        value={value}
-                        onValueChange={onChange}
-                        onSuggestion={suggestion => {
-                          setFieldValue("addressLine1", suggestion.completeAddress);
-                          setFieldValue("city", suggestion.city);
-                          setFieldValue("postalCode", suggestion.postalCode ?? "");
-                        }}
-                        language={locale.language}
-                        placeholder={t("addressInput.placeholder")}
-                        emptyResultText={t("common.noResults")}
-                        error={error}
+                      <LakeTextInput
                         id={id}
+                        error={error}
+                        placeholder={t("cardWizard.address.line1")}
+                        value={value}
+                        onChangeText={onChange}
                       />
                     )}
                   />

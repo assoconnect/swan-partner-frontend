@@ -122,7 +122,7 @@ export const CardWizardAddressForm = ({
       />
 
       <FieldsListener names={["country"]}>
-        {({ country }) => {
+        {() => {
           return (
             <>
               <Field name="addressLine1">

@@ -46,7 +46,7 @@ export const CardWizardAddressForm = ({
   onSubmit,
   showButtons = true,
 }: Props) => {
-  const { Field, FieldsListener, setFieldValue, submitForm } = useForm({
+  const { Field, FieldsListener, submitForm } = useForm({
     addressLine1: {
       initialValue: initialAddress.addressLine1,
       validate: combineValidators(validateRequired, validateAddressLine),

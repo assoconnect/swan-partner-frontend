@@ -105,7 +105,7 @@ const makeRequest: MakeRequest = ({ url, headers, operationName, document, varia
           Result.Error(errors.map(parseGraphQLError)),
         )
         .with({ data: P.select(P.nonNullable) }, data => {
-          type TData = [key: string, { __typename?: string; message?: string; [k: string]: any }];
+          type TData = [key: string, { __typename?: string; message?: string; [k: string]: unknown }];
           const capturedTypename = ['ForbiddenRejection', 'Rejection'];
           const dataArray: TData[] = Object.entries(data)
           

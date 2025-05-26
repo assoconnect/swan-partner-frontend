@@ -79,7 +79,7 @@ const makeRequest: MakeRequest = ({ url, headers, operationName, document, varia
   const newGqlGateway = getTgglFlag("newGqlGateway").getOr(false);
   const requestId = "req-" + nanoid();
   const traceparent = `${traceparentVersion}-${generateTraceId()}-${generateSpanId()}-${traceFlags}`;
-  console.log("MAKE REQUEST")
+
   return Request.make({
     url,
     method: "POST",

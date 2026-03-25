@@ -62,6 +62,7 @@ export const CardWizardFormat = ({ ref, cardProduct, initialCardFormat, onSubmit
     ...(cardProduct.applicableToPhysicalCards && canOrderPhysicalCard
       ? ["VirtualAndPhysical" as const]
       : []),
+    "SingleUseVirtual",
   ];
 
   return (
@@ -77,7 +78,7 @@ export const CardWizardFormat = ({ ref, cardProduct, initialCardFormat, onSubmit
                 name={match(cardFormat)
                   .with("Virtual", () => "lake-card-virtual" as const)
                   .with("VirtualAndPhysical", () => "lake-card-physical" as const)
-                  .with("SingleUseVirtual", () => "lake-card-virtual" as const)
+                  .with("SingleUseVirtual", () => "lake-card-single-use" as const)
                   .exhaustive()}
               />
 
@@ -94,7 +95,12 @@ export const CardWizardFormat = ({ ref, cardProduct, initialCardFormat, onSubmit
                     {t("cards.format.virtualAndPhysical")}
                   </Tag>
                 ))
-                .otherwise(() => null)}
+                .with("SingleUseVirtual", () => (
+                  <Tag icon="phone-regular" color="darkPink">
+                    {t("cards.format.singleUse")}
+                  </Tag>
+                ))
+                .exhaustive()}
 
               <Space height={12} />
 
@@ -105,7 +111,8 @@ export const CardWizardFormat = ({ ref, cardProduct, initialCardFormat, onSubmit
                     .with("VirtualAndPhysical", () =>
                       t("cards.format.virtualAndPhysical.description"),
                     )
-                    .otherwise(() => null)}
+                    .with("SingleUseVirtual", () => t("cards.format.singleUse.description"))
+                    .exhaustive()}
                 </LakeText>
               </View>
             </Box>

@@ -14224,10 +14224,10 @@ type Query {
   fundingSource(id: ID!): FundingSource
 
   """Returns an international beneficiary dynamic forms."""
-  internationalBeneficiaryDynamicForms(amount: AmountInput!, language: InternationalCreditTransferDisplayLanguage, dynamicFields: [InternationalBeneficiaryDetailsInput!]): InternationalBeneficiaryDynamicForms
+  internationalBeneficiaryDynamicForms(accountId: ID!, amount: AmountInput!, language: InternationalCreditTransferDisplayLanguage, dynamicFields: [InternationalBeneficiaryDetailsInput!]): InternationalBeneficiaryDynamicForms
 
   """Returns an international credit transfer dynamic form."""
-  internationalCreditTransferTransactionDetailsDynamicForm(targetAmount: AmountInput!, language: InternationalCreditTransferDisplayLanguage, internationalBeneficiary: InternationalBeneficiaryInput!, refreshableFields: [InternationalCreditTransferDetailsInput!]): InternationalCreditTransferDynamicForm
+  internationalCreditTransferTransactionDetailsDynamicForm(accountId: ID!, targetAmount: AmountInput!, language: InternationalCreditTransferDisplayLanguage, internationalBeneficiary: InternationalBeneficiaryInput!, refreshableFields: [InternationalCreditTransferDetailsInput!]): InternationalCreditTransferDynamicForm
 
   """Request an international credit transfer quote."""
   internationalCreditTransferQuote(accountId: ID!, route: InternationalCreditTransferRouteInput, targetAmount: AmountInput!, language: InternationalCreditTransferDisplayLanguage): InternationalCreditTransferQuote

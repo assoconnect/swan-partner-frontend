@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/simon/Documents/Assoconnect/delivery/container/prod-web/**)",
+      "Read(//home/simon/Documents/Assoconnect/delivery/container/prod-cron/**)",
+      "Read(//home/simon/Documents/Assoconnect/delivery/middleware/etc/dns/**)",
+      "Read(//home/simon/Documents/Assoconnect/delivery/**)"
+    ]
+  }
+}

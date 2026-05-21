@@ -78,7 +78,6 @@ export const TransferList = ({ accountId, accountMembershipId, params }: Props) 
   const paymentProduct = useMemo(() => {
     return [
       "SEPACreditTransfer" as const,
-      "InternalCreditTransfer" as const,
       "InternationalCreditTransfer" as const,
     ];
   }, []);

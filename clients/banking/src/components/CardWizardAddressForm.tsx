@@ -81,7 +81,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
       },
     });
 
-    const [apiRateLimited, setApiRateLimited] = useState(false);
+    const [isApiRateLimited, setIsApiRateLimited] = useState(false);
 
     const submit = useCallback(() => {
       submitForm({
@@ -90,7 +90,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           if (
             !values.selectedAddress.isSome() &&
             getFieldValue("country") === "FRA" &&
-            !apiRateLimited
+            !isApiRateLimited
           ) {
             return
           }
@@ -149,7 +149,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
         // On rate limit (429) from the La Poste API, skip the address selection
         // modal and let the user validate the address they entered directly.
         if (axios.isAxiosError(error) && error.response?.status === 429) {
-          setApiRateLimited(true);
+          setIsApiRateLimited(true);
           return;
         }
         console.error("Error:", error);

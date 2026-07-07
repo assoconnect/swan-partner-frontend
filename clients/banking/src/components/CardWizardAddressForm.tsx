@@ -81,11 +81,17 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
       },
     });
 
+    const [isApiRateLimited, setIsApiRateLimited] = useState(false);
+
     const submit = useCallback(() => {
       submitForm({
         onSuccess: values => {
 
-          if (!values.selectedAddress.isSome() && getFieldValue("country") === "FRA") {
+          if (
+            !values.selectedAddress.isSome() &&
+            getFieldValue("country") === "FRA" &&
+            !isApiRateLimited
+          ) {
             return
           }
 
@@ -101,7 +107,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           });
         },
       });
-    }, [onSubmit, submitForm, getFieldValue]);
+    }, [onSubmit, submitForm, getFieldValue, isApiRateLimited]);
 
     const [suggestedAddresses, setSuggestedAddresses] = useState<{
       adresse: string;
@@ -132,13 +138,20 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const filteredAddresses: { adresse: string; code: string; }[] = response.data.result;
           setSuggestedAddresses(filteredAddresses);
+          setIsModalVisible(true);
           if(filteredAddresses.length > 0 && filteredAddresses[0]?.code !== undefined) {
             handleSelectAddress(filteredAddresses[0]?.code);          }
         } else {
           console.error("Unexpected response structure:", response.data);
         }
       })
-      .catch(error => {
+      .catch((error: unknown) => {
+        // On rate limit (429) from the La Poste API, skip the address selection
+        // modal and let the user validate the address they entered directly.
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          setIsApiRateLimited(true);
+          return;
+        }
         console.error("Error:", error);
       });
   };
@@ -340,17 +353,28 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
         <FieldsListener names={["country"]}>
           {() =>
             showButtons && getFieldValue("country") === "FRA" ? (
-              <LakeButton
-                mode="primary"
-                color="current"
-                onPress={() => {
-                  setIsModalVisible(true);
-                  searchAddress();
-                }}
-                grow={true}
-              >
-                {t("common.search.address")}
-              </LakeButton>
+              isApiRateLimited ? (
+                <LakeButtonGroup>
+                  <LakeButton mode="secondary" onPress={onPressClose} grow={true}>
+                    {t("common.cancel")}
+                  </LakeButton>
+
+                  <LakeButton onPress={submit} color="current">
+                    {t("common.confirm")}
+                  </LakeButton>
+                </LakeButtonGroup>
+              ) : (
+                <LakeButton
+                  mode="primary"
+                  color="current"
+                  onPress={() => {
+                    searchAddress();
+                  }}
+                  grow={true}
+                >
+                  {t("common.search.address")}
+                </LakeButton>
+              )
             ) : null
           }
         </FieldsListener>

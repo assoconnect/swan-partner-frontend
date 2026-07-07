@@ -107,7 +107,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
           });
         },
       });
-    }, [onSubmit, submitForm, getFieldValue, apiRateLimited]);
+    }, [onSubmit, submitForm, getFieldValue, isApiRateLimited]);
 
     const [suggestedAddresses, setSuggestedAddresses] = useState<{
       adresse: string;
@@ -353,7 +353,7 @@ export const CardWizardAddressForm = forwardRef<CardWizardAddressFormRef, Props>
         <FieldsListener names={["country"]}>
           {() =>
             showButtons && getFieldValue("country") === "FRA" ? (
-              apiRateLimited ? (
+              isApiRateLimited ? (
                 <LakeButtonGroup>
                   <LakeButton mode="secondary" onPress={onPressClose} grow={true}>
                     {t("common.cancel")}

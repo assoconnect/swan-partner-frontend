@@ -109,7 +109,7 @@ const makeRequest: MakeRequest = ({ url, headers, operationName, document, varia
           const capturedTypename = ['ForbiddenRejection', 'Rejection'];
           const dataArray: TData[] = Object.entries(data)
           
-          const rejections = dataArray.filter(([_, value]) => capturedTypename.includes(value['__typename'] as string)
+          const rejections = dataArray.filter(([_, value]) => value != null && capturedTypename.includes(value['__typename'] as string)
            )
            .map(([key, value]) => `${key}: ${value.__typename}, message: ${value.message}`)
 
